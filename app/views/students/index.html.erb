@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Student Index</title>
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss/dist/tailwind.min.css">
+  </head>
+  <body>
+    <div class="container mx-auto">
+      <h1 class="text-3xl font-bold mb-8">Student Index</h1>
+      <div class="grid grid-cols-3 gap-4 mt-8">
+        <% @students.each do |student| %>
+          <%= turbo_frame_tag dom_id(student) do %>
+            <%= link_to student_path(student) do %>
+              <div class="bg-white rounded-lg shadow-md p-4">
+                <h2 class="text-xl font-bold mb-4"><%= student.name %></h2>
+                <p class="text-gray-700"><%= student.age %></p>
+              </div>
+            <% end %>
+          <% end%>
+        <% end %>
+      </div>
+    </div>
+  </body>
+</html>

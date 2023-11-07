@@ -1,5 +1,5 @@
 shared: &shared
-  adapter: postgres
+  adapter: postgresql
   encoding: utf-8
   pool: 5
 

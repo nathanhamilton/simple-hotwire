@@ -1,0 +1,12 @@
+<div class="mb-20">
+  <%= turbo_frame_tag dom_id(student_course_record) do %>
+    <div class="bg-white rounded-lg shadow-md p-8">
+      <h3 class="text-gray-700"><%= student_course_record.name %></h3>
+      <p class="text-gray-700"><%= student_course_record.score %></p>
+      <p class="text-gray-700"><%= student_course_record.credits %></p>
+      <p class="text-gray-700"><%= student_course_record.start_date %></p>
+      <p class="text-gray-700"><%= student_course_record.end_date %></p>
+      <p class="text-gray-700"><%= student_course_record.registered_at %></p>
+    </div>
+  <% end %>
+</div>
