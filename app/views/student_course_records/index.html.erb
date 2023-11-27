@@ -1,8 +1,52 @@
 <div>
   <h1 class="mb-30">The Student Course Records for <%= @student.name %></h1>
   </br>
+  <button onclick="togglePanel()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-5">Add Course</button>
+  </br>
   <% turbo_stream_from :student_course_records %>
   <div id="student_course_records">
     <%= render @student_course_records %>
   </div>
+  <% turbo_stream_from :courses %>
+  <div id="course_panel" style="display: none; position: fixed; right: 0; top: 0; width: 500px; height: 100%; overflow: auto; background-color: #f1f1f1; margin: 0px 5px; padding: 15px;">
+    <!-- Course listings will be populated here -->
+    <h1 style="font-size: 30px"> Courses </h1>
+    <%= render @courses %>
+  </div>
 </div>
+
+<script>
+  function togglePanel() {
+    var panel = document.getElementById('course_panel');
+    if (panel.style.display === "none") {
+      panel.style.display = "block";
+    } else {
+      panel.style.display = "none";
+    }
+  }
+
+  document.addEventListener('turbo:load', function() {
+    $('#student_course_records').sortable({
+      appendTo: document.body
+    });
+
+    $('#course_panel').sortable({
+      connectWith: '#student_course_records',
+      appendTo: document.body,
+      change: function( event, ui ) {
+        $.ajax({
+          type: 'POST',
+          url: '/student_course_records/create',
+          data: {
+            student_id: <%= @student.id %>,
+            student_course_record: {
+              student_id: <%= @student.id %>,
+              course_id: ui.item.data('course-id'),
+              position: ui.item.index()
+            }
+          }
+        });
+      },
+    });
+  });
+</script>
