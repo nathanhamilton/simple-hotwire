@@ -14,13 +14,17 @@ unless Rails.env.production?
                     zip: Faker::Address.zip_code)
   end
 
+  50.times do
+    Course.create!(course_name: Faker::Educator.course_name, credits: rand(1..5), college_name: Faker::University.name)
+  end
+
+  courses = Course.all
+
   Student.all.each do |student|
-    rand(1..5).times do
-      student.student_course_records.create!(name: Faker::Educator.course_name,
-                                             start_date: Faker::Date.between(from: 1.year.ago, to: Date.today),
+    rand(4..9).times do
+      student.student_course_records.create!(course_id: courses.sample.id, start_date: Faker::Date.between(from: 1.year.ago, to: Date.today),
                                              end_date: Faker::Date.between(from: 1.year.ago, to: Date.today),
                                              registered_at: Faker::Date.between(from: 1.year.ago, to: Date.today),
-                                             credits: rand(1..5),
                                              score: rand(1..100))
     end
   end

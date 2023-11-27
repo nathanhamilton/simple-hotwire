@@ -1,6 +1,8 @@
 version: '3'
 services:
   app:
+    tty: true
+    stdin_open: true
     build: .
     command: bundle exec rails s -p 3000 -b '0.0.0.0'
     volumes:
@@ -8,15 +10,18 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - postgres
+      - postgres-simple-hotwire
       - redis
     environment:
       RAILS_ENV: development
-      DATABASE_URL: postgres://root@postgres:5432/simple-hotwire
-  postgres:
+      DATABASE_URL: postgres://root:@postgres-simple-hotwire:5432/simple-hotwire
+      DATABASE_NAME: simple-hotwire
+    networks:
+      internal:
+  'postgres-simple-hotwire':
     image: postgres:latest
-    expose:
-      - "5432:5432"
+    ports:
+      - "6832:5432"
     volumes:
       - .:/app:cached
       - ./pgdata:/var/lib/postgresql/data/
@@ -24,7 +29,11 @@ services:
       POSTGRES_HOST_AUTH_METHOD: trust
       POSTGRES_DB: simple-hotwire
       POSTGRES_USER: root
+    networks:
+      internal:
   redis:
     image: redis:latest
 volumes:
   postgres_data:
+networks:
+  internal:

@@ -12,11 +12,12 @@ gem 'pry', '~> 0.14.2'
 gem "rails", "~> 7.1.1"
 gem 'redis', '~> 5.0', '>= 5.0.8'
 gem "sprockets-rails"
+gem "stimulus-rails"
 gem "tailwindcss-rails"
 # gem "kredis"
 # gem "bcrypt", "~> 3.1.7"
 gem "tzinfo-data", platforms: %i[ windows jruby ]
-gem 'turbo-rails', '~> 1.5'
+gem 'turbo-rails'
 
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ]

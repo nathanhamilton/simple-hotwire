@@ -34,16 +34,25 @@ RUN bundle install && \
     bundle exec bootsnap precompile --gemfile
 
 # Copy application code
-COPY . .
+ADD . .
 
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/
 
-# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
-RUN ./bin/rails assets:precompile
 
 # Final stage for app image
 FROM base
+
+# Install PostgreSQL client tools
+RUN apt-get update && \
+    apt-get install -y postgresql-client postgresql ca-certificates curl gnupg
+
+# Install Node.js and Yarn
+# RUN mkdir -p /etc/apt/keyrings
+# RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+# ENV NODE_MAJOR=20
+# RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+# RUN apt-get update && apt-get install nodejs -y
 
 # Install packages needed for deployment
 RUN apt-get update -qq && \
@@ -53,6 +62,9 @@ RUN apt-get update -qq && \
 # Copy built artifacts: gems, application
 COPY --from=build /usr/local/bundle /usr/local/bundle
 COPY --from=build /rails /rails
+
+# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
+RUN ./bin/rails assets:precompile
 
 # Run and own only the runtime files as a non-root user for security
 # RUN useradd rails --create-home --shell /bin/bash && \

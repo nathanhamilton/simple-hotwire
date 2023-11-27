@@ -2,10 +2,13 @@ shared: &shared
   adapter: postgresql
   encoding: utf-8
   pool: 5
+  url: <%= ENV['DATABASE_URL'] %>
 
 development:
   <<: *shared
-  url: <%= ENV['DATABASE_URL'] %>
+  host: postgres
+  port: 6832
+  database: simple-hotwire_development
 
 test:
   <<: *shared
@@ -13,4 +16,3 @@ test:
 
 production:
   <<: *shared
-  url: <%= ENV['DATABASE_URL'] %>
