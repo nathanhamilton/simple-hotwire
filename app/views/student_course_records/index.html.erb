@@ -36,24 +36,27 @@
 
       change: function( event, ui ) {
         console.log(ui.item)
-        ui.item.addClass('mb-5');
 
-        $.ajax({
-          type: 'POST',
-          url: '/students/' + <%= @student.id %> + '/student_course_records',
-          headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
-          data: {
-            student_course_record: {
-              student_id: <%= @student.id %>,
-              course_id: ui.item.data('course-id'),
-              name: ui.item.data('course-name'),
-              score: null,
-              start_date: null,
-              end_date: null,
-              registered_at: null
+        if (event.target.id === 'student_course_records') {
+          ui.item.addClass('mb-5'); // Add margin to the bottom of the item to match the items that are already there.
+
+          $.ajax({
+            type: 'DELETE',
+            url: '/students/' + <%= @student.id %> + '/student_course_records/' + ui.item.data('student-course-record-id'),
+            headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
+            data: {
+              student_course_record: {
+                student_id: <%= @student.id %>,
+                course_id: ui.item.data('course-id'),
+                name: ui.item.data('course-name'),
+                score: null,
+                start_date: null,
+                end_date: null,
+                registered_at: null
+              }
             }
-          }
-        });
+          });
+        }
       },
     });
   });

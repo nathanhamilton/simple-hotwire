@@ -8,7 +8,7 @@ development:
   <<: *shared
   host: postgres
   port: 6832
-  database: simple-hotwire_development
+  database: simple-hotwire
 
 test:
   <<: *shared

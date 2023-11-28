@@ -18,7 +18,7 @@ services:
       DATABASE_NAME: simple-hotwire
     networks:
       internal:
-  'postgres-simple-hotwire':
+  "postgres-simple-hotwire":
     image: postgres:latest
     ports:
       - "6832:5432"
@@ -31,7 +31,7 @@ services:
       POSTGRES_USER: root
     networks:
       internal:
-  'redis-simple-hotwire':
+  "redis-simple-hotwire":
     image: redis:latest
     expose:
       - "6379"
