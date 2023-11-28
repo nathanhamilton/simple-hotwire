@@ -33,16 +33,24 @@
     $('#course_panel').sortable({
       connectWith: '#student_course_records',
       appendTo: document.body,
+
       change: function( event, ui ) {
+        console.log(ui.item)
+        ui.item.addClass('mb-5');
+
         $.ajax({
           type: 'POST',
-          url: '/student_course_records/create',
+          url: '/students/' + <%= @student.id %> + '/student_course_records',
+          headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
           data: {
-            student_id: <%= @student.id %>,
             student_course_record: {
               student_id: <%= @student.id %>,
               course_id: ui.item.data('course-id'),
-              position: ui.item.index()
+              name: ui.item.data('course-name'),
+              score: null,
+              start_date: null,
+              end_date: null,
+              registered_at: null
             }
           }
         });

@@ -2,6 +2,7 @@ source "https://rubygems.org"
 
 ruby "3.2.2"
 
+gem 'annotate', '~> 3.1', '>= 3.1.2'
 gem 'better_errors', '~> 2.10', '>= 2.10.1'
 gem "bootsnap", require: false
 gem 'faker', '~> 3.2', '>= 3.2.2'

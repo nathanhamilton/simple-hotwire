@@ -11,7 +11,7 @@ services:
       - "3000:3000"
     depends_on:
       - postgres-simple-hotwire
-      - redis
+      - redis-simple-hotwire
     environment:
       RAILS_ENV: development
       DATABASE_URL: postgres://root:@postgres-simple-hotwire:5432/simple-hotwire
@@ -31,8 +31,12 @@ services:
       POSTGRES_USER: root
     networks:
       internal:
-  redis:
+  'redis-simple-hotwire':
     image: redis:latest
+    expose:
+      - "6379"
+    networks:
+      internal:
 volumes:
   postgres_data:
 networks:
