@@ -35,7 +35,6 @@
       appendTo: document.body,
 
       change: function( event, ui ) {
-        console.log(ui.item)
 
         if (event.target.id === 'student_course_records') {
           ui.item.addClass('mb-5'); // Add margin to the bottom of the item to match the items that are already there.
@@ -60,4 +59,17 @@
       },
     });
   });
+
+  function calculateItemLocation(item) {
+    let parent = item.parentElement
+    let children = parent.children
+    let node;
+
+    for (let i=0, j=0, ii=children.length; i < ii; i++) {
+      if (children[i] === item) {
+        return j
+      }
+      j++
+    }
+  }
 </script>

@@ -2,10 +2,9 @@ class StudentCourseRecordsController < ApplicationController
 
   def index
     @student = Student.find(params[:student_id])
-    @student_course_records = StudentCourseRecord.where(student_id: @student.id).includes(:course)
+    @student_course_records = StudentCourseRecord.where(student_id: @student.id).includes(:course).order(order: :desc)
     @courses = Course.where.not(id: @student_course_records.pluck(:course_id))
   end
-
 
   def new
     @student = Student.find(params[:student_id])
