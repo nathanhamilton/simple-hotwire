@@ -4,14 +4,15 @@
   <button onclick="togglePanel()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-5">Add Course</button>
   </br>
   <% turbo_stream_from :student_course_records %>
-  <div id="student_course_records">
+  <div id="student_course_records" data-controller="student-course-records">
     <%= render @student_course_records %>
   </div>
   <% turbo_stream_from :courses %>
   <div id="course_panel" style="display: none; position: fixed; right: 0; top: 0; width: 500px; height: 100%; overflow: auto; background-color: #f1f1f1; margin: 0px 5px; padding: 15px;">
-    <!-- Course listings will be populated here -->
     <h1 style="font-size: 30px"> Courses </h1>
-    <%= render @courses %>
+    <div id="courses" data-controller="courses">
+      <%= render @courses %>
+    </div>
   </div>
 </div>
 
@@ -22,54 +23,6 @@
       panel.style.display = "block";
     } else {
       panel.style.display = "none";
-    }
-  }
-
-  document.addEventListener('turbo:load', function() {
-    $('#student_course_records').sortable({
-      appendTo: document.body
-    });
-
-    $('#course_panel').sortable({
-      connectWith: '#student_course_records',
-      appendTo: document.body,
-
-      change: function( event, ui ) {
-
-        if (event.target.id === 'student_course_records') {
-          ui.item.addClass('mb-5'); // Add margin to the bottom of the item to match the items that are already there.
-
-          $.ajax({
-            type: 'DELETE',
-            url: '/students/' + <%= @student.id %> + '/student_course_records/' + ui.item.data('student-course-record-id'),
-            headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
-            data: {
-              student_course_record: {
-                student_id: <%= @student.id %>,
-                course_id: ui.item.data('course-id'),
-                name: ui.item.data('course-name'),
-                score: null,
-                start_date: null,
-                end_date: null,
-                registered_at: null
-              }
-            }
-          });
-        }
-      },
-    });
-  });
-
-  function calculateItemLocation(item) {
-    let parent = item.parentElement
-    let children = parent.children
-    let node;
-
-    for (let i=0, j=0, ii=children.length; i < ii; i++) {
-      if (children[i] === item) {
-        return j
-      }
-      j++
     }
   }
 </script>
