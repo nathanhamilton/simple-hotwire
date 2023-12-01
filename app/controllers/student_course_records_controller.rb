@@ -33,7 +33,7 @@ class StudentCourseRecordsController < ApplicationController
           render :new
         end
       end
-      format.js do
+      format.json do
         if @student_course_record.save
           head :ok
         else

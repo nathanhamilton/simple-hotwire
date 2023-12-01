@@ -28,9 +28,23 @@ export default class extends Controller {
       onAdd: (event) => {
         if (event.from.id === 'courses') {
           event.item.classList.add('mb-5')
+          const courseId = console.log(event.item.dataset.courseId) // Access the data-course-id attribute value
+          this.createNewStudentCourseRecord(courseId) // Call the createNewStudentCourseRecord function with the courseId
         }
       },
     })
+  }
+
+  createNewStudentCourseRecord(courseId) {
+    // Make an AJAX call to create a new student course record
+    const currentUrl = new URL(document.URL)
+    const studentId = currentUrl.pathname.split('/')[2]
+    let url = `/students/${studentId}/student_course_records`
+    let data = {
+      student_id: studentId,
+      course_id: courseId
+    }
+    this.makePostCall(url, data)
   }
 
   bulkUpdateOrder(orderArray) {
@@ -38,14 +52,19 @@ export default class extends Controller {
     const currentUrl = new URL(document.URL)
     const studentId = currentUrl.pathname.split('/')[2]
     let url = `/students/${studentId}/student_course_records/bulk_update_order`
-    let token = document.querySelector('meta[name="csrf-token"]').content
     let data = {
       order_array: JSON.stringify(orderArray)
     }
+    this.makePostCall(url, data)
+  }
+
+  makePostCall(url, data) {
+    let token = document.querySelector('meta[name="csrf-token"]').content
     fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Accept": "application/json",
         "X-CSRF-Token": token
       },
       body: JSON.stringify(data)
