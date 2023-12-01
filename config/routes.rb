@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   get 'posts/index'
   resources :students do
-    resources :student_course_records
+    resources :student_course_records do
+      post :bulk_update_order, on: :collection
+    end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

@@ -1,4 +1,5 @@
 class StudentCourseRecordsController < ApplicationController
+  include StudentCourseRecordHelper
 
   def index
     @student = Student.find(params[:student_id])
@@ -9,6 +10,14 @@ class StudentCourseRecordsController < ApplicationController
   def new
     @student = Student.find(params[:student_id])
     @student_course_record = StudentCourseRecord.new
+  end
+
+  def bulk_update_order
+    checked_items = check_order_params(JSON.parse(params["order_array"]))
+    checked_items.each do |item|
+      StudentCourseRecord.find(item["id"]).update(order: item["order"])
+    end
+    head :no_content
   end
 
   def create
