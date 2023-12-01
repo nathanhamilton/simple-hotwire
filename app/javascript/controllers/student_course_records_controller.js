@@ -14,36 +14,18 @@ export default class extends Controller {
       },
       store: {
         get: (sortable) => {
-          console.log('this is sortable')
-          console.log(sortable)
           let order = localStorage.getItem(sortable.options.group.name)
-          console.log('This is the get order')
-          console.log(order)
           return order ? order.split('|') : []
         },
         set: (sortable) => {
-          console.log('sortable for the set function')
-          console.log(sortable.el)
           let order = sortable.toArray()
-          console.log('This is the set order')
-          console.log(order)
           let orderArray = order.map((itemId, index) => {
-            // Work with this to determine why the sortable.el.children[itemId] is not working
-            console.log('This is the sortable.el.children[itemId]')
-            console.log(itemId)
-            console.log({ id: itemId, order: index })
             return { id: itemId, order: index }
           })
-          localStorage.setItem(sortable.options.group.name, order.join('|'))
-          console.log('This is the order array')
-          console.log(orderArray)
           this.bulkUpdateOrder(orderArray) // Call the updateItems function with the order
         }
       },
       onAdd: (event) => {
-        console.log(event.from)
-        console.log(event.from.id)
-        console.log(event)
         if (event.from.id === 'courses') {
           event.item.classList.add('mb-5')
         }
@@ -60,7 +42,6 @@ export default class extends Controller {
     let data = {
       order_array: JSON.stringify(orderArray)
     }
-    console.log(data)
     fetch(url, {
       method: "POST",
       headers: {
