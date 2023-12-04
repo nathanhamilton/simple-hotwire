@@ -3,7 +3,7 @@ class StudentCourseRecordsController < ApplicationController
 
   def index
     @student = Student.find(params[:student_id])
-    @student_course_records = StudentCourseRecord.where(student_id: @student.id).includes(:course).order(order: :desc)
+    @student_course_records = StudentCourseRecord.where(student_id: @student.id).includes(:course)
     @courses = Course.where.not(id: @student_course_records.pluck(:course_id))
   end
 
@@ -18,6 +18,11 @@ class StudentCourseRecordsController < ApplicationController
       StudentCourseRecord.find(item["id"]).update(order: item["order"])
     end
     head :no_content
+  end
+
+  def show
+    @student = Student.find(params[:student_id])
+    @student_course_record = StudentCourseRecord.find(params[:id])
   end
 
   def create
@@ -36,6 +41,7 @@ class StudentCourseRecordsController < ApplicationController
       format.json do
         if @student_course_record.save
           head :ok
+          render turbo_stream: turbo_stream.refresh
         else
           head :internal_server_error
         end
@@ -62,6 +68,10 @@ class StudentCourseRecordsController < ApplicationController
   def destroy
     @student_course_record = StudentCourseRecord.find(params[:id])
     @student_course_record.destroy
+    respond_to do |format|
+      format.html { redirect_to student_student_course_records_path(@student) }
+      format.turbo_stream { render turbo_stream: turbo_stream.remove(@student_course_record) }
+    end
   end
 
   private

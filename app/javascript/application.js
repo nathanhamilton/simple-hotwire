@@ -2,4 +2,4 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 // Define a variable to check in inlined HTML script
-window.importmapScriptsLoaded = true;
+window.importmapScriptsLoaded = true;import "@rails/request.js"

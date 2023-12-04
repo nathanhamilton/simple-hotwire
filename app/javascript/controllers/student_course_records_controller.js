@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import Sortable from "sortablejs"
+import { post } from "@rails/request.js"
 
 // Connects to data-controller="student-course-records"
 export default class extends Controller {
@@ -28,7 +29,7 @@ export default class extends Controller {
       onAdd: (event) => {
         if (event.from.id === 'courses') {
           event.item.classList.add('mb-5')
-          const courseId = console.log(event.item.dataset.courseId) // Access the data-course-id attribute value
+          const courseId = event.item.dataset.courseId // Access the data-course-id attribute value
           this.createNewStudentCourseRecord(courseId) // Call the createNewStudentCourseRecord function with the courseId
         }
       },
@@ -58,25 +59,42 @@ export default class extends Controller {
     this.makePostCall(url, data)
   }
 
-  makePostCall(url, data) {
-    let token = document.querySelector('meta[name="csrf-token"]').content
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "X-CSRF-Token": token
-      },
-      body: JSON.stringify(data)
-    })
-    .then(response => response)
-    .then(data => {
-      console.log(data)
-      // Handle the response data if needed
-    })
-    .catch(error => {
-      console.error(error)
-      // Handle the error if needed
-    })
+  async makePostCall (url, data) {
+    const response = await post(
+      url,
+      {
+        body: JSON.stringify(data),
+        contentType: 'application/json',
+        responseType: 'turbo-stream'
+      }
+    )
+    if (response.ok) {
+      console.log(response)
+    } else {
+      console.log(response)
+    }
   }
+
+  // makePostCall(url, data) {
+  //   let token = document.querySelector('meta[name="csrf-token"]').content
+  //   fetch(url, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       "Accept": "application/json",
+  //       "X-CSRF-Token": token
+  //     },
+  //     body: JSON.stringify(data)
+  //   })
+  //   .then(response => response)
+  //   .then(data => {
+  //     console.log(data)
+  //     // Handle the response data if needed
+  //   })
+  //   .catch(error => {
+  //     console.error(error)
+  //     // Handle the error if needed
+  //   })
+  // }
 }
+// <%= button_to "Delete", student_student_course_record_path(@student, student_course_record), action: 'delete', method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>

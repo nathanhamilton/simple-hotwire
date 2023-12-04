@@ -18,7 +18,7 @@ gem "tailwindcss-rails"
 # gem "kredis"
 # gem "bcrypt", "~> 3.1.7"
 gem "tzinfo-data", platforms: %i[ windows jruby ]
-gem 'turbo-rails'
+gem "turbo-rails", "~> 2.0.0.pre.beta"
 
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ]
@@ -35,3 +35,4 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+gem "requestjs-rails", "~> 0.0.11"
