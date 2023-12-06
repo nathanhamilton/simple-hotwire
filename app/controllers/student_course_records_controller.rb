@@ -3,7 +3,7 @@ class StudentCourseRecordsController < ApplicationController
 
   def index
     @student = Student.find(params[:student_id])
-    @student_course_records = StudentCourseRecord.where(student_id: @student.id).includes(:course)
+    @student_course_records = StudentCourseRecord.where(student_id: @student.id).includes(:course).order(:order)
     @courses = Course.where.not(id: @student_course_records.pluck(:course_id))
   end
 
@@ -13,9 +13,12 @@ class StudentCourseRecordsController < ApplicationController
   end
 
   def bulk_update_order
+    @student = Student.find(params[:student_id])
     checked_items = check_order_params(JSON.parse(params["order_array"]))
+    puts `These are the checked items: #{checked_items}`
     checked_items.each do |item|
-      StudentCourseRecord.find(item["id"]).update(order: item["order"])
+      student_course_record = StudentCourseRecord.find(item["id"])
+      student_course_record.update(order: item["order"])
     end
     head :no_content
   end
@@ -38,14 +41,25 @@ class StudentCourseRecordsController < ApplicationController
           render :new
         end
       end
-      format.json do
+      format.turbo_stream do
         if @student_course_record.save
-          head :ok
-          render turbo_stream: turbo_stream.refresh
+          render turbo_stream: turbo_stream.replace(
+            dom_id(@student_course_record),
+            partial: "student_course_records/student_course_record",
+            locals: { student_course_record: @student_course_record, student: @student }
+          )
         else
           head :internal_server_error
         end
       end
+      # format.json do
+      #   if @student_course_record.save
+      #     head :ok
+      #     render turbo_stream
+      #   else
+      #     head :internal_server_error
+      #   end
+      # end
     end
   end
 

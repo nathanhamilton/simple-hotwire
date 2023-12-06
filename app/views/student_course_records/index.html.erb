@@ -3,7 +3,7 @@
   </br>
   <button onclick="togglePanel()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-5">Add Course</button>
   </br>
-  <% turbo_stream_from :student_course_records %>
+  <% turbo_stream_from @student_course_records %>
   <div id="student_course_records" data-controller="student-course-records">
     <%= render @student_course_records %>
   </div>

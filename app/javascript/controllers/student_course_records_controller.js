@@ -19,6 +19,16 @@ export default class extends Controller {
           return order ? order.split('|') : []
         },
         set: (sortable) => {
+          // Get the current state of the DOM
+          let items = Array.from(document.getElementById('student_course_records').children);
+          // console.log(`These are the items of the new array: ${JSON.stringify(items)}`)
+          // Update the array of items based on the current state of the DOM
+          let updatedArray = items.map((item, index) => {
+            return { id: item.getAttribute('data-id'), order: index }
+          });
+          // console.log(`This is the updated array: ${JSON.stringify(updatedArray)}`)
+          // Refresh the Sortable.js instance
+          sortable.sort(updatedArray);
           let order = sortable.toArray()
           let orderArray = order.map((itemId, index) => {
             return { id: itemId, order: index }
@@ -64,7 +74,6 @@ export default class extends Controller {
       url,
       {
         body: JSON.stringify(data),
-        contentType: 'application/json',
         responseType: 'turbo-stream'
       }
     )
@@ -74,27 +83,5 @@ export default class extends Controller {
       console.log(response)
     }
   }
-
-  // makePostCall(url, data) {
-  //   let token = document.querySelector('meta[name="csrf-token"]').content
-  //   fetch(url, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       "Accept": "application/json",
-  //       "X-CSRF-Token": token
-  //     },
-  //     body: JSON.stringify(data)
-  //   })
-  //   .then(response => response)
-  //   .then(data => {
-  //     console.log(data)
-  //     // Handle the response data if needed
-  //   })
-  //   .catch(error => {
-  //     console.error(error)
-  //     // Handle the error if needed
-  //   })
-  // }
 }
-// <%= button_to "Delete", student_student_course_record_path(@student, student_course_record), action: 'delete', method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+ 
