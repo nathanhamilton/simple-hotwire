@@ -10,6 +10,13 @@
         <p class="text-gray-900"><%= student_course_record.course.course_name %></p>
       </div>
       <div class="w-1/8 p-2">
+        <%= turbo_frame_tag "edit_score_#{student_course_record.id}" do %>
+          <%= form_with model: [@student, student_course_record], method: :patch, remote: true do |f| %>
+            <strong>Score</strong>
+            <%= f.text_field :score, class: "text-grey-900" %>
+            <%= f.submit 'Update' %>
+          <% end %>
+        <% end %>
         <strong>Score</strong>
         <p class="text-gray-700"><%= student_course_record.score %></p>
       </div>
@@ -18,10 +25,24 @@
         <p class="text-gray-700"><%= student_course_record.course.credits %></p>
       </div>
       <div class="w-3/8 p-2">
+        <%= turbo_frame_tag "edit_start_date_#{student_course_record.id}" do %>
+          <%= form_with model: [@student, student_course_record], method: :patch, remote: true do |f| %>
+            <strong>Start date</strong>
+            <%= f.text_field :start_date, class: "text-grey-900" %>
+            <%= f.submit 'Update' %>
+          <% end %>
+        <% end %>
         <strong>Start date</strong>
         <p class="text-gray-700"><%= student_course_record.start_date %></p>
       </div>
       <div class="w-3/8 p-2">
+        <%= turbo_frame_tag "edit_end_date_#{student_course_record.id}" do %>
+          <%= form_with model: [@student, student_course_record], method: :patch, remote: true do |f| %>
+            <strong>End date</strong>
+            <%= f.text_field :end_date, class: "text-grey-900" %>
+            <%= f.submit 'Update' %>
+          <% end %>
+        <% end %>
         <strong>End date</strong>
         <p class="text-gray-700"><%= student_course_record.end_date %></p>
       </div>
@@ -31,8 +52,7 @@
       </div>
       <div class="w-3/8 p-2">
         <%= button_to "Delete",
-          student_student_course_record_path(@student,
-                                             student_course_record),
+          student_student_course_record_path(@student, student_course_record),
           action: 'delete', method: :delete,
           data: { confirm: 'Are you sure?' },
           class: 'btn btn-danger' %>

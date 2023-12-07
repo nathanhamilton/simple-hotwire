@@ -1,20 +1,18 @@
-<div class="mt-5 mt-5" data-course-id=<%= course.id %>>
-  <%= turbo_frame_tag dom_id(course) do %>
-    <div class="bg-white rounded-lg shadow-md p-2">
-      <div class="flex flex-row justify-between">
-        <div class="w-3/8 p-2">
-          <strong>Name</strong>
-          <p class="text-gray-900"><%= course.course_name %></p>
-        </div>
-        <div class="w-3/8 p-2">
-          <strong>Credits</strong>
-          <p class="text-gray-700"><%= course.credits %></p>
-        </div>
-        <div class="w-3/8 p-2">
-          <strong>College</strong>
-          <p class="text-gray-700"><%= course.college_name %></p>
-        </div>
+<%= turbo_frame_tag dom_id(course), 'data-course-id': course.id do %>
+  <div class="bg-white rounded-lg shadow-md p-2 mt-5">
+    <div class="flex flex-row justify-between">
+      <div class="w-3/8 p-2">
+        <strong>Name</strong>
+        <p class="text-gray-900"><%= course.course_name %></p>
+      </div>
+      <div class="w-3/8 p-2">
+        <strong>Credits</strong>
+        <p class="text-gray-700"><%= course.credits %></p>
+      </div>
+      <div class="w-3/8 p-2">
+        <strong>College</strong>
+        <p class="text-gray-700"><%= course.college_name %></p>
       </div>
     </div>
-  <% end %>
-</div>
+  </div>
+<% end %>

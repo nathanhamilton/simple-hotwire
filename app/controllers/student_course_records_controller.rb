@@ -41,21 +41,21 @@ class StudentCourseRecordsController < ApplicationController
           render :new
         end
       end
-      format.turbo_stream do
+      format.json do
         if @student_course_record.save
-          render turbo_stream: turbo_stream.replace(
-            dom_id(@student_course_record),
-            partial: "student_course_records/student_course_record",
-            locals: { student_course_record: @student_course_record, student: @student }
-          )
+          render json: { status: :created, data: { student_course_record_id: @student_course_record.id }}
         else
-          head :internal_server_error
+          render json: @student_course_record.errors, status: :unprocessable_entity
         end
       end
-      # format.json do
+      # May use this in the future to render the partial for a new student course record
+      # format.turbo_stream do
       #   if @student_course_record.save
-      #     head :ok
-      #     render turbo_stream
+      #     render turbo_stream: turbo_stream.replace(
+      #       dom_id(@student_course_record),
+      #       partial: "student_course_records/student_course_record",
+      #       locals: { student_course_record: @student_course_record, student: @student }
+      #     )
       #   else
       #     head :internal_server_error
       #   end
@@ -73,7 +73,10 @@ class StudentCourseRecordsController < ApplicationController
     @student_course_record = StudentCourseRecord.find(params[:id])
     begin
       @student_course_record.update!(student_course_record_params)
-      redirect_to student_student_course_records_path(@student)
+      respond_to do |format|
+        format.turbo_stream { render turbo_stream: turbo_stream.replace(@student_course_record, partial: "student_course_records/student_course_record", locals: { student_course_record: @student_course_record, student: @student }) }
+        format.html { redirect_to student_student_course_records_path(@student) }
+      end
     rescue
       render :edit
     end
@@ -91,6 +94,8 @@ class StudentCourseRecordsController < ApplicationController
   private
 
   def student_course_record_params
-    params.require(:student_course_record).permit(:student_id, :course_id, :name, :score, :start_date, :end_date, :registered_at)
+    params.require(:student_course_record)
+          .permit(:student_id, :order, :course_id, :name,
+                  :score, :start_date, :end_date, :registered_at)
   end
 end

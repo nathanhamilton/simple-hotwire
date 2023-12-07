@@ -38,27 +38,46 @@ export default class extends Controller {
       },
       onAdd: (event) => {
         if (event.from.id === 'courses') {
-          event.item.classList.add('mb-5')
+          event.item.children[0].classList.add('mb-5')
           const courseId = event.item.dataset.courseId // Access the data-course-id attribute value
-          this.createNewStudentCourseRecord(courseId) // Call the createNewStudentCourseRecord function with the courseId
+          const index = event.newIndex // Access the new index of the item
+          const response = this.createNewStudentCourseRecord(courseId, index) // Call the createNewStudentCourseRecord function with the courseId
+          console.log(`This is the response: ${JSON.stringify(response)}`)
+          // console.log(event.item.dataIdAttr('data-id').add(response))
         }
       },
     })
   }
 
-  createNewStudentCourseRecord(courseId) {
+  async createNewStudentCourseRecord(courseId, index) {
     // Make an AJAX call to create a new student course record
     const currentUrl = new URL(document.URL)
     const studentId = currentUrl.pathname.split('/')[2]
     let url = `/students/${studentId}/student_course_records`
     let data = {
       student_id: studentId,
-      course_id: courseId
+      course_id: courseId,
+      order: index
     }
-    this.makePostCall(url, data)
+    await post( url,
+      {
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      }
+    )
+    .then((response) => {
+      console.log(response)
+      return response
+    })
+    .catch((error) => {
+      console.log(error)
+    })
   }
 
-  bulkUpdateOrder(orderArray) {
+  async bulkUpdateOrder(orderArray) {
     // Make an AJAX call to update the items in the specified order
     const currentUrl = new URL(document.URL)
     const studentId = currentUrl.pathname.split('/')[2]
@@ -66,22 +85,17 @@ export default class extends Controller {
     let data = {
       order_array: JSON.stringify(orderArray)
     }
-    this.makePostCall(url, data)
-  }
-
-  async makePostCall (url, data) {
-    const response = await post(
+    await post(
       url,
       {
         body: JSON.stringify(data),
-        responseType: 'turbo-stream'
       }
     )
-    if (response.ok) {
+    .then((response) => {
       console.log(response)
-    } else {
-      console.log(response)
-    }
+    })
+    .catch((error) => {
+      console.log(error)
+    })
   }
 }
- 
