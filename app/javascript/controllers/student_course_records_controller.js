@@ -89,6 +89,10 @@ export default class extends Controller {
       url,
       {
         body: JSON.stringify(data),
+        headers: {
+          'Accept': 'text/vnd.turbo-stream.html',
+          'Content-Type': 'application/json'
+        }
       }
     )
     .then((response) => {

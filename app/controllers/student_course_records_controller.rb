@@ -1,5 +1,6 @@
 class StudentCourseRecordsController < ApplicationController
   include StudentCourseRecordHelper
+  include ActionView::RecordIdentifier
 
   def index
     @student = Student.find(params[:student_id])
@@ -15,12 +16,25 @@ class StudentCourseRecordsController < ApplicationController
   def bulk_update_order
     @student = Student.find(params[:student_id])
     checked_items = check_order_params(JSON.parse(params["order_array"]))
-    puts `These are the checked items: #{checked_items}`
-    checked_items.each do |item|
+
+    updated_records = checked_items.map do |item|
       student_course_record = StudentCourseRecord.find(item["id"])
       student_course_record.update(order: item["order"])
+      student_course_record
     end
-    head :no_content
+
+    # Render turbo stream for each updated student_course_record
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: updated_records.map { |record|
+          turbo_stream.replace(
+            record,
+            partial: "student_course_records/student_course_record",
+            locals: { student_course_record: record, student: @student }
+          )
+        }.join.html_safe
+      end
+    end
   end
 
   def show
